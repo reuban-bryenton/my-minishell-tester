@@ -20,7 +20,7 @@
     {
         "name": "Basic tests: Run simple commands",
         "commands": ["ls -lah /home", "pwd", "id"],
-        "sleeptime": 0.5,
+        "sleeptime": 0.1,
         "override_excode": -1
     },
     {
@@ -32,7 +32,7 @@
     {
         "name": "Path handling: Path 1",
         "commands": ["ls -lah /home", "setenv fraise desbois", "unit_tests/simple_pathtest"],
-        "sleeptime": 0.5,
+        "sleeptime": 0.1,
         "override_excode": -1
     },
     {
@@ -44,7 +44,7 @@
     {
         "name": "setenv and unsetenv",
         "commands": ["echo $fraise", "setenv fraise desbois", "echo $fraise", "unit_tests/simple_pathtest", "unsetenv fraise", "unit_tests/simple_pathtest"],
-        "sleeptime": 0.5,
+        "sleeptime": 0.1,
         "override_excode": -1
     },
     {
@@ -56,48 +56,60 @@
     {
         "name": "setenv: error handling",
         "commands": ["setenv ok=2", "setenv @PATH 4", "setenv ILOVESTRAWBERRIES ANDYOU YES"],
-        "sleeptime": 0.5,
+        "sleeptime": 0.1,
         "override_excode": -1
     },
     {
         "name": "cd: basic cd test",
         "commands": ["pwd", "cd /tmp", "pwd", "cd /usr/local/share", "pwd", "cd ..", "pwd"],
-        "sleeptime": 0.5,
+        "sleeptime": 0.1,
+        "override_excode": -1
+    },
+    {
+        "name": "cd: advanced cd test",
+        "commands": ["pwd", "cd", "pwd"],
+        "sleeptime": 0.1,
         "override_excode": -1
     },
     {
         "name": "cd: error handling",
         "commands": ["cd tests.json", "pwd", "cd /unknownfile", "pwd", "cd /bin/bash", "pwd", "cd /boot", "pwd"],
-        "sleeptime": 0.5,
+        "sleeptime": 0.1,
         "override_excode": -1
     },
     {
         "name": "cd: cd -",
         "commands": ["pwd", "cd /tmp", "pwd", "cd -", "pwd", "cd /var", "pwd", "cd -", "pwd", "cd -", "pwd"],
-        "sleeptime": 0.5,
+        "sleeptime": 0.1,
         "override_excode": -1
     },
     {
         "name": "line formatting: space 1",
-        "commands": [" ls /tmp"],
+        "commands": [" ls /"],
         "sleeptime": -1,
         "override_excode": -1
     },
     {
         "name": "line formatting: space 2",
-        "commands": ["  ls  -l"],
+        "commands": [" ls    /"],
         "sleeptime": -1,
         "override_excode": -1
     },
     {
         "name": "line formatting: space 3",
-        "commands": [" \t  ls   -l\t "],
+        "commands": ["  ls  /  "],
+        "sleeptime": -1,
+        "override_excode": -1
+    },
+    {
+        "name": "line formatting: space 4",
+        "commands": [" \t  ls   /\t "],
         "sleeptime": -1,
         "override_excode": -1
     },
     {
         "name": "line formatting: spaces & tabs",
-        "commands": ["\t ls \t\t \t    -l\t"],
+        "commands": ["\t ls \t\t \t/    \t"],
         "sleeptime": -1,
         "override_excode": -1
     },
@@ -122,7 +134,7 @@
     {
         "name": "error handling: exec a directory",
         "commands": ["unit_tests/", "./unit_tests", "./unit_tests/"],
-        "sleeptime": 0.5,
+        "sleeptime": 0.1,
         "override_excode": -1
     }
 ]
