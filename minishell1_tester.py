@@ -15,8 +15,35 @@ def print_diff(mot, tmot):
     print(Fore.YELLOW, "---END---")
     reset_color()
 
+def exec_process_echo(test, md):
+    try:
+        echocmds = test['commands']
+        bf = ""
+        bf += "echo -e '{0}'\n".format('echo "' + echocmds[0] + '" | ' + sys.argv[1])
+        if test['sleeptime'] > 0:
+            bf += "sleep {0}\n".format(test['sleeptime'])
+        tst_file = open("tmp", "w")
+        tst_file.write(bf)
+        tst_file.close()
+        #eproc = subprocess.Popen(("/bin/bash", "-C", "tmp"), stdout=subprocess.PIPE)
+        #exc = ["echo", echocmds[0]]
+        #proc = subprocess.Popen((exc), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
+        #proc.communicate(echocmds[0]) if not md else proc.communicate("tcsh")
+        #proc.wait(10)
+        #ot = proc.stdout.read()
+        cmd = sys.argv[1] if not md else "tcsh"
+        ot = subprocess.check_output("echo \"{0}\" | {1}".format(echocmds[0], cmd), shell=True)
+        ot = ot.decode()
+        return 0, ot #proc.returncode, ot
+    except subprocess.TimeoutExpired:
+        return 139, None
+    except Exception as e:
+        return -1, None
+
 def exec_process(test, md):
     try:
+        if (test['echo']):
+            return exec_process_echo(test, md)
         cmds = test['commands']
         cmds.insert(0, sys.argv[1])
         bf = ""
@@ -41,6 +68,8 @@ def exec_process(test, md):
 def start_test(test):
     mrcode, mot = exec_process(test, False)
     trcode, tmot = exec_process(test, True)
+    if (test['echo']):
+        print(Fore.YELLOW, "🗒️ Note: echo commands are in beta.".format(test['name']))
     expcode = test['override_excode']
     if expcode >= 0 and mrcode != expcode and expcode != 139:
         print(Fore.RED, "❌ Test [{0}]: Test failed.".format(test['name']))
