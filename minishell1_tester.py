@@ -42,13 +42,15 @@ def exec_process_echo(test, md):
 
 def exec_process(test, md):
     try:
-        if (test['echo']):
+        if (test['echo'] == 1):
             return exec_process_echo(test, md)
         cmds = test['commands']
-        cmds.insert(0, sys.argv[1])
         bf = ""
         for cmd in cmds:
             bf += "echo -e '{0}'\n".format(cmd)
+            if test['sleeptime'] > 0:
+                bf += "sleep {0}\n".format(test['sleeptime'])
+        if (len(cmds) == 0):
             if test['sleeptime'] > 0:
                 bf += "sleep {0}\n".format(test['sleeptime'])
         tst_file = open("tmp", "w")
@@ -67,7 +69,7 @@ def exec_process(test, md):
 
 def start_test(test):
     mrcode, mot = exec_process(test, False)
-    trcode, tmot = exec_process(test, True)
+    expcode, tmot = exec_process(test, True)
     if (test['echo']):
         print(Fore.YELLOW, "🗒️ Note: echo commands are in beta.".format(test['name']))
     expcode = test['override_excode']
@@ -138,3 +140,4 @@ def main():
 
 if __name__ == "__main__":
     exit(main())
+
